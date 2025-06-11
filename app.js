@@ -950,19 +950,21 @@ app.listen(PORT, () => {
   console.log(`[${now} WITA] Server berjalan pada port ${PORT}`);
 });
 
-async function startServer() {
-  try {
-    await db.query('SELECT 1');
-    const timestamp = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' });
-    console.log(`[${timestamp} WITA] Koneksi database berhasil`);
-    app.listen(PORT, () => {
-      console.log(`[${timestamp} WITA] Server berjalan pada port ${PORT}`);
-    });
-  } catch (error) {
-    const timestamp = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' });
-    console.error(`[${timestamp} WITA] Gagal memulai server:`, error);
-    process.exit(1);
-  }
-}
+const startServer = (port) => {
+  app.listen(port, () => {
+    const now = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' });
+    console.log(`[${now} WITA] Server berjalan pada port ${port}`);
+  }).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      const now = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' });
+      console.error(`[${now} WITA] Port ${port} is in use, trying ${port + 1}...`);
+      startServer(port + 1); // Coba port berikutnya
+    } else {
+      const now = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' });
+      console.error(`[${now} WITA] Server error:`, err);
+      process.exit(1);
+    }
+  });
+};
 
 startServer();
