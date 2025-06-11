@@ -945,6 +945,10 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  const now = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' });
+  console.log(`[${now} WITA] Server berjalan pada port ${PORT}`);
+});
 
 async function startServer() {
   try {
