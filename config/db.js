@@ -3,20 +3,24 @@ const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-  uri: process.env.DB_HOST,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  connectTimeout: 10000, // Timeout 10 detik untuk koneksi
-  timezone: '+08:00', // Gunakan offset untuk WITA (UTC+8) sebagai ganti Asia/Makassar
+  connectTimeout: 10000,
+  timezone: '+08:00'
 });
 
 // Fungsi untuk tes koneksi
 async function testConnection() {
   try {
     const connection = await pool.getConnection();
-    const [results] = await connection.query('SELECT NOW() AS server_time, 1 + 1 AS result'); // Ubah alias menjadi server_time
-    const witaTime = new Date(results[0].server_time).toISOString().replace('Z', '+08:00'); // Konversi ke WITA
+    const [results] = await connection.query('SELECT NOW() AS server_time, 1 + 1 AS result');
+    const witaTime = new Date(results[0].server_time).toISOString().replace('Z', '+08:00');
     console.log(`[${witaTime} WITA] Connected to MySQL database`);
     console.log(`[${witaTime} WITA] Test query result:`, results[0].result);
     connection.release();
@@ -28,7 +32,6 @@ async function testConnection() {
   }
 }
 
-// Jalankan tes koneksi saat file dimuat
 testConnection().catch((err) => {
   const now = new Date();
   const witaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Makassar' })).toISOString().replace('Z', '+08:00');
@@ -36,5 +39,4 @@ testConnection().catch((err) => {
   process.exit(1);
 });
 
-// Ekspor pool sebagai modul
 module.exports = pool;
