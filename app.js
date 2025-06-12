@@ -19,7 +19,12 @@ const jadwalRoutes = require('./routes/jadwalRoutes');
 const pemesananRoutes = require('./routes/pemesananRoutes');
 
 app.use(cors({
-  origin: ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://localhost:3000'],
+  origin: ['https://roomease-frontend-1dpe.onrender.com', 'http://localhost:5500'],
+  credentials: true
+}));
+
+app.use(cors({
+  origin: ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://localhost:3000','https://roomease-frontend-1dpe.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
