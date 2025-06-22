@@ -949,11 +949,8 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Rute tidak ditemukan' });
 });
 
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  const now = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar' });
-  console.log(`[${now} WITA] Server berjalan pada port ${PORT}`);
-});
 
 const startServer = (port) => {
   app.listen(port, () => {
@@ -972,4 +969,4 @@ const startServer = (port) => {
   });
 };
 
-startServer();
+startServer(PORT);
